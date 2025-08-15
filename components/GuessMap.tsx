@@ -22,6 +22,12 @@ export default function GuessMap({ guess, onGuessChange, revealed, gpt, answer }
   const ansMarkerRef = useRef<L.CircleMarker | null>(null);
   const lineYouRef = useRef<L.Polyline | null>(null);
   const lineGptRef = useRef<L.Polyline | null>(null);
+  const revealedRef = useRef<boolean>(false);
+
+  // Keep a live ref of revealed to avoid stale closure in click handler
+  useEffect(() => {
+    revealedRef.current = revealed;
+  }, [revealed]);
 
   // Init map once
   useEffect(() => {
@@ -33,6 +39,7 @@ export default function GuessMap({ guess, onGuessChange, revealed, gpt, answer }
     }).addTo(map);
 
     map.on("click", (e: any) => {
+      if (revealedRef.current) return; // ignore clicks after reveal
       const latlng = e.latlng as L.LatLng;
       // place or move guess marker
       if (!yourMarkerRef.current) {
@@ -92,7 +99,11 @@ export default function GuessMap({ guess, onGuessChange, revealed, gpt, answer }
 
     if (!revealed) {
       clearReveal();
-      map.setView([20, 0], 2);
+      // Only reset view at start of a round (when no guess placed yet),
+      // not on every guess update.
+      if (!guess) {
+        map.setView([20, 0], 2);
+      }
       return;
     }
 
