@@ -49,7 +49,14 @@ export default function GuessMap({ guess, onGuessChange, revealed, gpt, answer }
           weight: 3,
           fillColor: "#3b82f6",
           fillOpacity: 0.8,
-        }).addTo(map);
+        })
+          .addTo(map)
+          .bindTooltip("YOU", {
+            permanent: true,
+            direction: "top",
+            className: "pin-label pin-label-you",
+            offset: L.point(0, -10),
+          });
       } else {
         yourMarkerRef.current.setLatLng(latlng);
       }
@@ -83,7 +90,14 @@ export default function GuessMap({ guess, onGuessChange, revealed, gpt, answer }
         weight: 3,
         fillColor: "#3b82f6",
         fillOpacity: 0.8,
-      }).addTo(map);
+      })
+        .addTo(map)
+        .bindTooltip("YOU", {
+          permanent: true,
+          direction: "top",
+          className: "pin-label pin-label-you",
+          offset: L.point(0, -10),
+        });
     } else {
       yourMarkerRef.current.setLatLng(latlng as any);
     }
@@ -123,7 +137,14 @@ export default function GuessMap({ guess, onGuessChange, revealed, gpt, answer }
         weight: 3,
         fillColor: "#f59e0b",
         fillOpacity: 0.8,
-      }).addTo(map);
+      })
+        .addTo(map)
+        .bindTooltip("GPT-5", {
+          permanent: true,
+          direction: "top",
+          className: "pin-label pin-label-gpt",
+          offset: L.point(0, -10),
+        });
       ansMarkerRef.current = L.circleMarker([answer.lat, answer.lng], {
         radius: 8,
         color: "#22c55e",
