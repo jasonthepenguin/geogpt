@@ -26,8 +26,8 @@ Setup
 
 4) Provide locations data:
    - Copy `public/data/locations.example.json` → `public/data/locations.json`
-   - Replace each `mapillaryImageId` with a real Mapillary image id
-   - Keep or edit the `answer` and fake `gpt` coordinates
+   - If `mapillaryImageId` is missing or set to `REPLACE_WITH_REAL_IMAGE_ID`, the app will auto-fetch the nearest Mapillary image to the `answer` coordinates using your token.
+   - You can also manually set `mapillaryImageId` for more control.
 
    Finding an image id:
    - On https://www.mapillary.com/ open a place in the viewer and use Share/URL to get the image id (a long key). Use that as `mapillaryImageId`.
@@ -60,4 +60,4 @@ Notes
 - Mapillary tokens are intended for client use; still rotate if leaked.
 - Default OSM tiles are great for demos; consider a dedicated tile provider for production.
 - The stub API currently returns 501. We’ll integrate OpenAI later.
-
+ - Image IDs: The app attempts to look up a nearby image using `answer` coordinates if none is provided, which is usually good enough but not guaranteed to be the exact spot.

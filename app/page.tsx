@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import { formatDistance, formatLatLng, haversineMeters } from "@/utils/geo";
+import { fetchNearestImageId } from "@/utils/mapillary";
 
 // Client-only components
 const MapillaryViewer = dynamic(() => import("@/components/MapillaryViewer"), { ssr: false });
@@ -45,6 +46,33 @@ export default function Page() {
     load();
     return () => { cancelled = true; };
   }, []);
+
+  // Resolve missing image IDs progressively using Mapillary Graph API
+  useEffect(() => {
+    let cancelled = false;
+    const token = process.env.NEXT_PUBLIC_MAPILLARY_TOKEN ?? "";
+    async function resolveAll() {
+      if (!token) return;
+      // Resolve any entries with missing or placeholder imageId
+      const copy = [...locations];
+      let changed = false;
+      for (let i = 0; i < copy.length; i++) {
+        const loc = copy[i];
+        const missing = !loc.mapillaryImageId || loc.mapillaryImageId === "REPLACE_WITH_REAL_IMAGE_ID";
+        if (missing && loc.answer) {
+          const id = await fetchNearestImageId(loc.answer, token);
+          if (cancelled) return;
+          if (id) {
+            copy[i] = { ...loc, mapillaryImageId: id };
+            changed = true;
+          }
+        }
+      }
+      if (changed && !cancelled) setLocations(copy);
+    }
+    if (locations.length) resolveAll();
+    return () => { cancelled = true; };
+  }, [locations.length]);
 
   useEffect(() => {
     // Reset per-round state
@@ -126,4 +154,3 @@ export default function Page() {
     </>
   );
 }
-
