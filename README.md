@@ -22,11 +22,12 @@ Setup
 
 3) Configure environment:
    - Create a `.env.local` in the repo root with:
-     `NEXT_PUBLIC_MAPILLARY_TOKEN=YOUR_MAPILLARY_CLIENT_TOKEN`
+     `MAPILLARY_TOKEN=YOUR_MAPILLARY_CLIENT_TOKEN`
+   - Note: The token is now kept server-side for security
 
 4) Provide locations data:
    - Copy `public/data/locations.example.json` → `public/data/locations.json`
-   - If `mapillaryImageId` is missing or set to `REPLACE_WITH_REAL_IMAGE_ID`, the app will auto-fetch the nearest Mapillary image to the `answer` coordinates using your token.
+   - If `mapillaryImageId` is missing or set to `REPLACE_WITH_REAL_IMAGE_ID`, the app will auto-fetch the nearest Mapillary image to the `answer` coordinates.
    - You can also manually set `mapillaryImageId` for more control.
 
    Finding an image id:
@@ -52,12 +53,14 @@ Structure
 - `components/MapillaryViewer.tsx` — Mapillary viewer client component
 - `components/GuessMap.tsx` — Leaflet map client component
 - `utils/geo.ts` — haversine and formatting helpers
-- `app/api/llm/route.ts` — stub API route
+- `app/api/llm/route.ts` — stub API route for future LLM integration
+- `app/api/mapillary/viewer-config/route.ts` — secure endpoint for Mapillary token
+- `app/api/mapillary/nearest-image/route.ts` — server-side Mapillary image lookup
 - `public/data/locations.json` — your rounds (copy from the example)
 
 Notes
 -----
-- Mapillary tokens are intended for client use; still rotate if leaked.
+- Mapillary tokens are now secured server-side via Next.js API routes, preventing client exposure.
 - Default OSM tiles are great for demos; consider a dedicated tile provider for production.
-- The stub API currently returns 501. We’ll integrate OpenAI later.
- - Image IDs: The app attempts to look up a nearby image using `answer` coordinates if none is provided, which is usually good enough but not guaranteed to be the exact spot.
+- The stub API currently returns 501. We'll integrate OpenAI later.
+- Image IDs: The app attempts to look up a nearby image using `answer` coordinates if none is provided, which is usually good enough but not guaranteed to be the exact spot.

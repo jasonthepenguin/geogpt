@@ -18,9 +18,9 @@ try {
   console.log('Could not load .env.local:', e.message);
 }
 
-const token = process.env.NEXT_PUBLIC_MAPILLARY_TOKEN;
+const token = process.env.MAPILLARY_TOKEN;
 if (!token) {
-  console.error('Error: NEXT_PUBLIC_MAPILLARY_TOKEN not set');
+  console.error('Error: MAPILLARY_TOKEN not set');
   process.exit(1);
 }
 

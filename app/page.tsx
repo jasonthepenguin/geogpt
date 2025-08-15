@@ -50,9 +50,7 @@ export default function Page() {
   // Resolve missing image IDs progressively using Mapillary Graph API
   useEffect(() => {
     let cancelled = false;
-    const token = process.env.NEXT_PUBLIC_MAPILLARY_TOKEN ?? "";
     async function resolveAll() {
-      if (!token) return;
       // Resolve any entries with missing or placeholder imageId
       const copy = [...locations];
       let changed = false;
@@ -60,7 +58,7 @@ export default function Page() {
         const loc = copy[i];
         const missing = !loc.mapillaryImageId || loc.mapillaryImageId === "REPLACE_WITH_REAL_IMAGE_ID";
         if (missing && loc.answer) {
-          const id = await fetchNearestImageId(loc.answer, token);
+          const id = await fetchNearestImageId(loc.answer);
           if (cancelled) return;
           if (id) {
             copy[i] = { ...loc, mapillaryImageId: id };
@@ -104,8 +102,6 @@ export default function Page() {
     return distances.you <= distances.gpt ? "You win this round!" : "GPT-5 wins this round.";
   }, [revealed, distances]);
 
-  const token = process.env.NEXT_PUBLIC_MAPILLARY_TOKEN ?? "";
-
   return (
     <>
       <header className="topbar">
@@ -123,7 +119,7 @@ export default function Page() {
       <main className="content">
         <section className="viewer-panel">
           <div className="mly-container" style={{ position: "relative" }}>
-            <MapillaryViewer imageId={current?.mapillaryImageId} token={token} />
+            <MapillaryViewer imageId={current?.mapillaryImageId} />
           </div>
         </section>
         <section className="map-panel">

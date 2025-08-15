@@ -1,13 +1,30 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Viewer } from "mapillary-js";
 
-type Props = { imageId?: string; token: string };
+type Props = { imageId?: string };
 
-export default function MapillaryViewer({ imageId, token }: Props) {
+export default function MapillaryViewer({ imageId }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const viewerRef = useRef<Viewer | null>(null);
+  const [token, setToken] = useState<string | null>(null);
+
+  // Fetch token from API
+  useEffect(() => {
+    async function fetchToken() {
+      try {
+        const res = await fetch("/api/mapillary/viewer-config");
+        if (res.ok) {
+          const data = await res.json();
+          setToken(data.accessToken);
+        }
+      } catch (e) {
+        console.error("Failed to fetch Mapillary token", e);
+      }
+    }
+    fetchToken();
+  }, []);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -30,7 +47,7 @@ export default function MapillaryViewer({ imageId, token }: Props) {
     };
 
     if (!token) {
-      showOverlay("Mapillary token missing", "Set NEXT_PUBLIC_MAPILLARY_TOKEN in .env.local");
+      showOverlay("Mapillary token missing", "Set MAPILLARY_TOKEN in .env.local");
       return;
     }
     if (!imageId) {
