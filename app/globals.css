@@ -1,0 +1,75 @@
+:root {
+  --bg: #0f1115;
+  --panel: #171a21;
+  --text: #e6e9ef;
+  --muted: #9aa3b2;
+  --accent: #2ec27e;
+  --accent-2: #3b82f6;
+  --warn: #f59e0b;
+  --divider: #262a34;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  color: var(--text);
+  background: var(--bg);
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--divider);
+}
+.brand { font-weight: 700; letter-spacing: 0.3px; }
+.muted { color: var(--muted); }
+.actions { display: flex; gap: 8px; }
+button { cursor: pointer; border: 0; border-radius: 8px; padding: 8px 12px; color: white; background: #333946; }
+button.primary { background: var(--accent-2); }
+button.secondary { background: #475064; }
+button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  height: calc(100vh - 100px);
+  padding: 10px;
+}
+.viewer-panel, .map-panel { background: var(--panel); border: 1px solid var(--divider); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; }
+
+.mly-container, .map-container { flex: 1; min-height: 300px; }
+.overlay { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(15,17,21,0.8); color: var(--text); padding: 16px; text-align: center; }
+.hidden { display: none; }
+
+.scoreboard { padding: 10px 12px; border-top: 1px solid var(--divider); background: #141821; display: grid; gap: 6px; }
+.divider { height: 1px; background: var(--divider); margin: 6px 0; }
+.winner { margin-top: 4px; font-weight: 700; color: var(--accent); }
+
+.footer { height: 36px; display: grid; place-items: center; border-top: 1px solid var(--divider); background: var(--panel); }
+
+.viewer-panel { position: relative; }
+
+@media (max-width: 900px) {
+  .content { grid-template-columns: 1fr; height: auto; }
+  .footer { position: sticky; bottom: 0; }
+}
+
+/* Leaflet custom markers (DivIcon) */
+.pin {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.3);
+}
+.pin-you { background: #3b82f6; }
+.pin-gpt { background: #f59e0b; }
+.pin-ans { background: #22c55e; }
+
