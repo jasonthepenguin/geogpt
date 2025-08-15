@@ -161,12 +161,19 @@ export default function Page() {
       <header className="topbar">
         <div className="brand">GeoGPT</div>
         <div className="round-info">
-          <span id="roundLabel">{showResults ? "Results" : (locations.length ? `Round ${round + 1} / ${locations.length}` : "Loading...")}</span>
-          <span id="locationTitle" className="muted">{!showResults && current?.title ? ` • ${current.title}` : ""}</span>
-          {results.length > 0 && (
-            <div className="score-tally">Score: You {totals.you} — {totals.gpt} GPT-5{totals.tie ? ` (ties ${totals.tie})` : ""}</div>
+          <span id="roundLabel">{showResults ? "Game Results" : (locations.length ? `Round ${round + 1} of ${locations.length}` : "Loading...")}</span>
+          {!showResults && current?.title && (
+            <span id="locationTitle" className="muted">• {current.title}</span>
           )}
         </div>
+        {results.length > 0 && !showResults && (
+          <div className="score-tally">
+            <span>You: {totals.you}</span>
+            <span>•</span>
+            <span>GPT-5: {totals.gpt}</span>
+            {totals.tie > 0 && <span>• Ties: {totals.tie}</span>}
+          </div>
+        )}
         <div className="actions">
           {showResults ? (
             <button className="primary" onClick={onRestart}>Play Again</button>
@@ -182,9 +189,12 @@ export default function Page() {
       {showResults ? (
         <main className="results">
           <section className="results-summary">
-            <h2 style={{ margin: 0 }}>Final Results</h2>
-            <div className="final-score">You {totals.you} — {totals.gpt} GPT-5{totals.tie ? ` (ties ${totals.tie})` : ""}</div>
-            <div className="final-winner">{totals.you === totals.gpt ? "Overall: Tie" : (totals.you > totals.gpt ? "Overall: You win!" : "Overall: GPT-5 wins.")}</div>
+            <h2 style={{ margin: 0 }}>🏆 Game Over</h2>
+            <div className="final-score">{totals.you} — {totals.gpt}</div>
+            <div style={{ color: 'var(--muted)', fontSize: '14px', marginTop: '-8px' }}>You vs GPT-5</div>
+            <div className="final-winner">
+              {totals.you === totals.gpt ? "🤝 It's a tie!" : (totals.you > totals.gpt ? "🎉 You win!" : "🤖 GPT-5 wins")}
+            </div>
           </section>
           <section className="results-list">
             {results
@@ -196,7 +206,13 @@ export default function Page() {
                   <div className="title">{r.title ?? r.locationId}</div>
                   <div className="spacer" />
                   <div className="distances">You: {formatDistance(r.youDistance)} • GPT-5: {formatDistance(r.gptDistance)}</div>
-                  <div className="winner">{r.winner === "tie" ? "Tie" : (r.winner === "you" ? "You" : "GPT-5")}</div>
+                  <div className="winner" style={{
+                    background: r.winner === "you" ? 'rgba(59, 130, 246, 0.1)' : (r.winner === "gpt" ? 'rgba(245, 158, 11, 0.1)' : 'rgba(255, 255, 255, 0.05)'),
+                    color: r.winner === "you" ? 'var(--accent-2)' : (r.winner === "gpt" ? 'var(--warn)' : 'var(--muted)'),
+                    border: `1px solid ${r.winner === "you" ? 'rgba(59, 130, 246, 0.2)' : (r.winner === "gpt" ? 'rgba(245, 158, 11, 0.2)' : 'rgba(255, 255, 255, 0.1)')}`,
+                  }}>
+                    {r.winner === "tie" ? "Tie" : (r.winner === "you" ? "You" : "GPT-5")}
+                  </div>
                 </div>
               ))}
           </section>
@@ -204,8 +220,14 @@ export default function Page() {
       ) : (
         <main className="content">
           <section className="viewer-panel">
-            <div className="mly-container" style={{ position: "relative" }}>
+            <div className="mly-container">
               <MapillaryViewer imageId={current?.mapillaryImageId} />
+              {!current?.mapillaryImageId && (
+                <div className="overlay">
+                  <div className="loading" style={{ width: '200px', height: '20px', borderRadius: '10px' }}></div>
+                  <p style={{ marginTop: '16px' }}>Loading street view...</p>
+                </div>
+              )}
             </div>
           </section>
           <section className="map-panel">
@@ -219,12 +241,31 @@ export default function Page() {
               />
             </div>
             <div className="scoreboard">
-              <div><strong>Your guess:</strong> <span>{guess ? formatLatLng(guess.lat, guess.lng) : "—"}</span></div>
-              <div><strong>GPT-5 guess:</strong> <span>{revealed && current ? formatLatLng(current.gpt.lat, current.gpt.lng) : "Hidden"}</span></div>
-              <div><strong>Answer:</strong> <span>{revealed && current ? formatLatLng(current.answer.lat, current.answer.lng) : "Hidden"}</span></div>
+              <div>
+                <strong>Your guess</strong>
+                <span>{guess ? formatLatLng(guess.lat, guess.lng) : "Click map to guess"}</span>
+              </div>
+              <div>
+                <strong>GPT-5 guess</strong>
+                <span>{revealed && current ? formatLatLng(current.gpt.lat, current.gpt.lng) : "Hidden until reveal"}</span>
+              </div>
+              <div>
+                <strong>Correct answer</strong>
+                <span>{revealed && current ? formatLatLng(current.answer.lat, current.answer.lng) : "Hidden until reveal"}</span>
+              </div>
               <div className="divider"></div>
-              <div><strong>Your distance:</strong> <span>{distances.you != null ? formatDistance(distances.you) : "—"}</span></div>
-              <div><strong>GPT-5 distance:</strong> <span>{distances.gpt != null ? formatDistance(distances.gpt) : "—"}</span></div>
+              <div>
+                <strong>Your distance</strong>
+                <span style={{ color: revealed && distances.you != null && distances.gpt != null && distances.you <= distances.gpt ? 'var(--accent)' : 'inherit' }}>
+                  {distances.you != null ? formatDistance(distances.you) : "—"}
+                </span>
+              </div>
+              <div>
+                <strong>GPT-5 distance</strong>
+                <span style={{ color: revealed && distances.you != null && distances.gpt != null && distances.gpt < distances.you ? 'var(--warn)' : 'inherit' }}>
+                  {distances.gpt != null ? formatDistance(distances.gpt) : "—"}
+                </span>
+              </div>
               <div className="winner">{winner}</div>
             </div>
           </section>

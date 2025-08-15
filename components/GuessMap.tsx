@@ -42,14 +42,14 @@ export default function GuessMap({ guess, onGuessChange, revealed, gpt, answer }
       if (revealedRef.current) return; // ignore clicks after reveal
       const latlng = e.latlng as L.LatLng;
       // place or move guess marker
-      if (!yourMarkerRef.current) {
-        yourMarkerRef.current = L.circleMarker(latlng, {
-          radius: 8,
-          color: "#3b82f6",
-          weight: 3,
-          fillColor: "#3b82f6",
-          fillOpacity: 0.8,
-        })
+          if (!yourMarkerRef.current) {
+      yourMarkerRef.current = L.circleMarker(latlng, {
+        radius: 10,
+        color: "white",
+        weight: 3,
+        fillColor: "#3b82f6",
+        fillOpacity: 1,
+      })
           .addTo(map)
           .bindTooltip("YOU", {
             permanent: true,
@@ -85,11 +85,11 @@ export default function GuessMap({ guess, onGuessChange, revealed, gpt, answer }
     const latlng: LatLngExpression = [guess.lat, guess.lng];
     if (!yourMarkerRef.current) {
       yourMarkerRef.current = L.circleMarker(latlng, {
-        radius: 8,
-        color: "#3b82f6",
+        radius: 10,
+        color: "white",
         weight: 3,
         fillColor: "#3b82f6",
-        fillOpacity: 0.8,
+        fillOpacity: 1,
       })
         .addTo(map)
         .bindTooltip("YOU", {
@@ -132,11 +132,11 @@ export default function GuessMap({ guess, onGuessChange, revealed, gpt, answer }
 
     if (gpt && answer) {
       gptMarkerRef.current = L.circleMarker([gpt.lat, gpt.lng], {
-        radius: 8,
-        color: "#f59e0b",
+        radius: 10,
+        color: "white",
         weight: 3,
         fillColor: "#f59e0b",
-        fillOpacity: 0.8,
+        fillOpacity: 1,
       })
         .addTo(map)
         .bindTooltip("GPT-5", {
@@ -146,18 +146,35 @@ export default function GuessMap({ guess, onGuessChange, revealed, gpt, answer }
           offset: L.point(0, -10),
         });
       ansMarkerRef.current = L.circleMarker([answer.lat, answer.lng], {
-        radius: 8,
-        color: "#22c55e",
+        radius: 12,
+        color: "white",
         weight: 3,
-        fillColor: "#22c55e",
-        fillOpacity: 0.8,
-      }).addTo(map);
+        fillColor: "#10b981",
+        fillOpacity: 1,
+      })
+        .addTo(map)
+        .bindTooltip("ANSWER", {
+          permanent: true,
+          direction: "top",
+          className: "pin-label",
+          offset: L.point(0, -12),
+        });
     }
     if (answer && guess) {
-      lineYouRef.current = L.polyline([[guess.lat, guess.lng], [answer.lat, answer.lng]], { color: "#3b82f6" }).addTo(map);
+      lineYouRef.current = L.polyline([[guess.lat, guess.lng], [answer.lat, answer.lng]], { 
+        color: "#3b82f6",
+        weight: 3,
+        opacity: 0.6,
+        dashArray: "10, 10"
+      }).addTo(map);
     }
     if (answer && gpt) {
-      lineGptRef.current = L.polyline([[gpt.lat, gpt.lng], [answer.lat, answer.lng]], { color: "#f59e0b" }).addTo(map);
+      lineGptRef.current = L.polyline([[gpt.lat, gpt.lng], [answer.lat, answer.lng]], { 
+        color: "#f59e0b",
+        weight: 3,
+        opacity: 0.6,
+        dashArray: "10, 10"
+      }).addTo(map);
     }
 
     const layers: L.Layer[] = [];

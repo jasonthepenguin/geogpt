@@ -31,8 +31,8 @@ export default function MapillaryViewer({ imageId }: Props) {
     if (!containerRef.current) return;
 
     const showOverlay = (title: string, msg: string) => {
-      containerRef.current!.innerHTML = `<div style="position:absolute;inset:0;display:grid;place-items:center;background:rgba(15,17,21,0.8);color:#e6e9ef;text-align:center;padding:16px;">`
-        + `<div><h3 style='margin:0 0 8px 0'>${title}</h3><p style='margin:0'>${msg}</p></div>`
+      containerRef.current!.innerHTML = `<div class="overlay">`
+        + `<div><h3 style='margin:0 0 12px 0;font-size:18px;font-weight:600'>${title}</h3><p style='margin:0;color:#8b92a4;font-size:14px'>${msg}</p></div>`
         + `</div>`;
     };
 
