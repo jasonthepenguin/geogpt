@@ -160,6 +160,10 @@ export default function Page() {
     <>
       <header className="topbar">
         <div className="brand">GeoGPT</div>
+        <div className="footer-credit" style={{ marginLeft: '16px' }}>
+          <span>by Jason</span>
+          <img src="/jb.png" alt="Jason" />
+        </div>
         <div className="round-info">
           <span id="roundLabel">{showResults ? "Game Results" : (locations.length ? `Round ${round + 1} of ${locations.length}` : "Loading...")}</span>
           {!showResults && current?.title && (
@@ -224,8 +228,8 @@ export default function Page() {
               <MapillaryViewer imageId={current?.mapillaryImageId} />
               {!current?.mapillaryImageId && (
                 <div className="overlay">
-                  <div className="loading" style={{ width: '200px', height: '20px', borderRadius: '10px' }}></div>
-                  <p style={{ marginTop: '16px' }}>Loading street view...</p>
+                  <div className="loading"></div>
+                  <p style={{ marginTop: '8px', fontWeight: 'bold' }}>Loading street view...</p>
                 </div>
               )}
             </div>
@@ -256,13 +260,13 @@ export default function Page() {
               <div className="divider"></div>
               <div>
                 <strong>Your distance</strong>
-                <span style={{ color: revealed && distances.you != null && distances.gpt != null && distances.you <= distances.gpt ? 'var(--accent)' : 'inherit' }}>
+                <span className={revealed && distances.you != null && distances.gpt != null ? (distances.you <= distances.gpt ? 'distance-winner' : 'distance-loser') : ''}>
                   {distances.you != null ? formatDistance(distances.you) : "—"}
                 </span>
               </div>
               <div>
                 <strong>GPT-5 distance</strong>
-                <span style={{ color: revealed && distances.you != null && distances.gpt != null && distances.gpt < distances.you ? 'var(--warn)' : 'inherit' }}>
+                <span className={revealed && distances.you != null && distances.gpt != null ? (distances.gpt < distances.you ? 'distance-winner' : 'distance-loser') : ''}>
                   {distances.gpt != null ? formatDistance(distances.gpt) : "—"}
                 </span>
               </div>
@@ -273,7 +277,7 @@ export default function Page() {
       )}
 
       <footer className="footer">
-        <span className="muted">Map data © OpenStreetMap contributors • Imagery © Mapillary</span>
+        <span className="muted">Map data © OpenStreetMap • Imagery © Mapillary</span>
       </footer>
     </>
   );

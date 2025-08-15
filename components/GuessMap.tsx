@@ -44,10 +44,10 @@ export default function GuessMap({ guess, onGuessChange, revealed, gpt, answer }
       // place or move guess marker
           if (!yourMarkerRef.current) {
       yourMarkerRef.current = L.circleMarker(latlng, {
-        radius: 10,
-        color: "white",
-        weight: 3,
-        fillColor: "#3b82f6",
+        radius: 8,
+        color: "#000000",
+        weight: 2,
+        fillColor: "#0000ff",
         fillOpacity: 1,
       })
           .addTo(map)
@@ -85,10 +85,10 @@ export default function GuessMap({ guess, onGuessChange, revealed, gpt, answer }
     const latlng: LatLngExpression = [guess.lat, guess.lng];
     if (!yourMarkerRef.current) {
       yourMarkerRef.current = L.circleMarker(latlng, {
-        radius: 10,
-        color: "white",
-        weight: 3,
-        fillColor: "#3b82f6",
+        radius: 8,
+        color: "#000000",
+        weight: 2,
+        fillColor: "#0000ff",
         fillOpacity: 1,
       })
         .addTo(map)
@@ -132,10 +132,10 @@ export default function GuessMap({ guess, onGuessChange, revealed, gpt, answer }
 
     if (gpt && answer) {
       gptMarkerRef.current = L.circleMarker([gpt.lat, gpt.lng], {
-        radius: 10,
-        color: "white",
-        weight: 3,
-        fillColor: "#f59e0b",
+        radius: 8,
+        color: "#000000",
+        weight: 2,
+        fillColor: "#ff0000",
         fillOpacity: 1,
       })
         .addTo(map)
@@ -146,10 +146,10 @@ export default function GuessMap({ guess, onGuessChange, revealed, gpt, answer }
           offset: L.point(0, -10),
         });
       ansMarkerRef.current = L.circleMarker([answer.lat, answer.lng], {
-        radius: 12,
-        color: "white",
-        weight: 3,
-        fillColor: "#10b981",
+        radius: 10,
+        color: "#000000",
+        weight: 2,
+        fillColor: "#00ff00",
         fillOpacity: 1,
       })
         .addTo(map)
@@ -162,18 +162,18 @@ export default function GuessMap({ guess, onGuessChange, revealed, gpt, answer }
     }
     if (answer && guess) {
       lineYouRef.current = L.polyline([[guess.lat, guess.lng], [answer.lat, answer.lng]], { 
-        color: "#3b82f6",
-        weight: 3,
-        opacity: 0.6,
-        dashArray: "10, 10"
+        color: "#0000ff",
+        weight: 2,
+        opacity: 1,
+        dashArray: "5, 5"
       }).addTo(map);
     }
     if (answer && gpt) {
       lineGptRef.current = L.polyline([[gpt.lat, gpt.lng], [answer.lat, answer.lng]], { 
-        color: "#f59e0b",
-        weight: 3,
-        opacity: 0.6,
-        dashArray: "10, 10"
+        color: "#ff0000",
+        weight: 2,
+        opacity: 1,
+        dashArray: "5, 5"
       }).addTo(map);
     }
 
