@@ -270,7 +270,7 @@ export default function Page() {
                   {distances.gpt != null ? formatDistance(distances.gpt) : "—"}
                 </span>
               </div>
-              <div className="winner">{winner}</div>
+              <div className="winner"><span className="winner-text">{winner}</span></div>
             </div>
           </section>
         </main>

@@ -291,7 +291,7 @@ button.primary {
 
 .winner {
   margin-top: 8px;
-  padding: 10px 50px;
+  padding: 10px 16px;
   background: var(--highlight);
   color: var(--highlight-text);
   border: 3px solid;
@@ -301,29 +301,25 @@ button.primary {
   font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 1px;
+  display: block;
   position: relative;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
-.winner::before {
-  content: '★';
-  position: absolute;
-  left: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 20px;
+.winner-text {
+  display: inline-block;
+  position: relative;
 }
 
-.winner::after {
-  content: '★';
-  position: absolute;
-  right: 15px;
-  top: 50%;
-  transform: translateY(-50%);
+.winner-text::before {
+  content: '★ ';
   font-size: 20px;
+  margin-right: 8px;
+}
+
+.winner-text::after {
+  content: ' ★';
+  font-size: 20px;
+  margin-left: 8px;
 }
 
 /* Footer */
