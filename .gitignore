@@ -3,4 +3,3 @@
 node_modules/
 .next/
 dist/
-public/data/locations.json
