@@ -68,6 +68,11 @@ export default function GuessMap({ guess, onGuessChange, revealed, gpt, answer }
         map.removeLayer(yourMarkerRef.current);
         yourMarkerRef.current = null;
       }
+      // Also clear the blue line when guess is cleared (moving to next round)
+      if (lineYouRef.current) {
+        map.removeLayer(lineYouRef.current);
+        lineYouRef.current = null;
+      }
       return;
     }
     const latlng: LatLngExpression = [guess.lat, guess.lng];
@@ -106,6 +111,10 @@ export default function GuessMap({ guess, onGuessChange, revealed, gpt, answer }
       }
       return;
     }
+
+    // When revealed and any dependency changes (e.g., advancing rounds),
+    // clear previous reveal layers before drawing new ones to avoid leftovers.
+    clearReveal();
 
     if (gpt && answer) {
       gptMarkerRef.current = L.circleMarker([gpt.lat, gpt.lng], {
