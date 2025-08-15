@@ -9,35 +9,52 @@ export default function MapillaryViewer({ imageId, token }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const viewerRef = useRef<Viewer | null>(null);
 
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      const v: any = viewerRef.current as any;
+      try { v?.remove?.(); } catch {}
+      try { v?.destroy?.(); } catch {}
+      viewerRef.current = null;
+      if (containerRef.current) containerRef.current.innerHTML = "";
+    };
+  }, []);
+
   useEffect(() => {
     if (!containerRef.current) return;
+
+    const showOverlay = (title: string, msg: string) => {
+      containerRef.current!.innerHTML = `<div style="position:absolute;inset:0;display:grid;place-items:center;background:rgba(15,17,21,0.8);color:#e6e9ef;text-align:center;padding:16px;">`
+        + `<div><h3 style='margin:0 0 8px 0'>${title}</h3><p style='margin:0'>${msg}</p></div>`
+        + `</div>`;
+    };
+
     if (!token) {
-      // Render a simple overlay when missing token
-      containerRef.current.innerHTML = `<div style="position:absolute;inset:0;display:grid;place-items:center;background:rgba(15,17,21,0.8);color:#e6e9ef;text-align:center;padding:16px;">`+
-        `<div><h3 style='margin:0 0 8px 0'>Mapillary token missing</h3><p style='margin:0'>Set NEXT_PUBLIC_MAPILLARY_TOKEN in .env.local</p></div>`+
-        `</div>`;
+      showOverlay("Mapillary token missing", "Set NEXT_PUBLIC_MAPILLARY_TOKEN in .env.local");
+      return;
+    }
+    if (!imageId) {
+      showOverlay("No image selected", "Provide a mapillaryImageId in your locations data");
       return;
     }
 
     try {
-      if (!viewerRef.current) {
-        viewerRef.current = new Viewer({
-          container: containerRef.current,
-          accessToken: token,
-          imageId,
-        });
-      } else if (imageId) {
-        viewerRef.current.moveTo(imageId);
-      }
+      // Recreate the viewer for the new image to avoid moveTo on non-navigable viewers.
+      const v: any = viewerRef.current as any;
+      try { v?.remove?.(); } catch {}
+      try { v?.destroy?.(); } catch {}
+      viewerRef.current = null;
+      containerRef.current.innerHTML = "";
+
+      viewerRef.current = new Viewer({
+        container: containerRef.current,
+        accessToken: token,
+        imageId,
+      });
     } catch (e) {
-      if (containerRef.current) {
-        containerRef.current.innerHTML = `<div style="position:absolute;inset:0;display:grid;place-items:center;background:rgba(15,17,21,0.8);color:#e6e9ef;text-align:center;padding:16px;">`+
-          `<div><h3 style='margin:0 0 8px 0'>Mapillary failed to load</h3><p style='margin:0'>Check token and image id.</p></div>`+
-          `</div>`;
-      }
+      showOverlay("Mapillary failed to load", "Check token and image id.");
     }
   }, [imageId, token]);
 
   return <div ref={containerRef} style={{ position: "absolute", inset: 0 }} />;
 }
-

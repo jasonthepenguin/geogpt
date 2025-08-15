@@ -2,7 +2,6 @@
 
 import React, { useEffect, useRef } from "react";
 import L, { LatLngExpression, Map as LeafletMap } from "leaflet";
-import "leaflet/dist/leaflet.css";
 
 type LatLng = { lat: number; lng: number };
 
@@ -132,4 +131,3 @@ export default function GuessMap({ guess, onGuessChange, revealed, gpt, answer }
 
   return <div ref={rootRef} style={{ height: "100%", width: "100%" }} />;
 }
-

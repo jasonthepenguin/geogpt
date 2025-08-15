@@ -4,6 +4,8 @@ export const metadata = {
 };
 
 import "./globals.css";
+import "leaflet/dist/leaflet.css";
+import "mapillary-js/dist/mapillary.css";
 import React from "react";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -13,4 +15,3 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </html>
   );
 }
-
