@@ -86,3 +86,16 @@ button:disabled { opacity: 0.6; cursor: not-allowed; }
 .pin-label-you { background: rgba(59,130,246,0.85); }
 .pin-label-gpt { background: rgba(245,158,11,0.85); }
 
+/* Results */
+.results { display: grid; gap: 14px; padding: 16px; }
+.results-summary { background: var(--panel); border: 1px solid var(--divider); border-radius: 10px; padding: 14px; display: grid; gap: 8px; }
+.final-score { font-size: 18px; font-weight: 700; }
+.final-winner { color: var(--accent); font-weight: 700; }
+.results-list { background: var(--panel); border: 1px solid var(--divider); border-radius: 10px; }
+.result-row { display: flex; gap: 10px; align-items: center; padding: 10px 12px; border-top: 1px solid var(--divider); }
+.result-row:first-child { border-top: 0; }
+.result-row .round { width: 90px; font-weight: 700; }
+.result-row .title { color: var(--muted); }
+.result-row .spacer { flex: 1; }
+.result-row .winner { font-weight: 700; }
+
